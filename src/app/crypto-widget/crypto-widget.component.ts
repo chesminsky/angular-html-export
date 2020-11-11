@@ -5,6 +5,8 @@ import { selectCoinData } from '../crypto-store/crypto.selectors';
 import { format } from 'date-fns';
 import { getCrypto } from '../crypto-store/crypto.actions';
 import { map, withLatestFrom } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-crypto-widget',
@@ -22,16 +24,25 @@ export class CryptoWidgetComponent implements OnInit {
   form = this.fb.group({
     coin: 'bitcoin',
     date: this.fb.control('', Validators.required),
-    currency: ''
+    currency: '',
   });
 
-  currencies$ = this.coinData$.pipe(map(d => d && Object.keys(d.market_data.current_price)));
+  currencies$ = this.coinData$.pipe(
+    map((d) => d && Object.keys(d.market_data.current_price))
+  );
 
-  value$ = this.form.get('currency').valueChanges.pipe(withLatestFrom(this.coinData$), map(([v, d]) => {
-    return d.market_data.current_price[v];
-  }));
+  value$ = this.form.get('currency').valueChanges.pipe(
+    withLatestFrom(this.coinData$),
+    map(([v, d]) => {
+      return d.market_data.current_price[v];
+    })
+  );
 
-  constructor(private store: Store, private fb: FormBuilder) {}
+  constructor(
+    private store: Store,
+    private fb: FormBuilder,
+    private http: HttpClient
+  ) {}
 
   ngOnInit(): void {}
 
@@ -43,5 +54,17 @@ export class CryptoWidgetComponent implements OnInit {
     const fv = { ...this.form.value };
     fv.date = format(fv.date, 'dd-MM-yyyy');
     this.store.dispatch(getCrypto({ ticket: fv.coin, date: fv.date }));
+  }
+
+  export() {
+    this.http
+      .get('index.html', { responseType: 'text' })
+      .subscribe((fileSrc) => {
+        const file = new File([fileSrc], `my-export.html`, {
+          type: 'text/html;charset=utf-8',
+        });
+
+        saveAs(file);
+      });
   }
 }
