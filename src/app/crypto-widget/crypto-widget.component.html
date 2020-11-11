@@ -1,4 +1,4 @@
-<form class="form" autocomplete="off">
+<form class="form" autocomplete="off" [formGroup]="form" (submit)="onSubmit()">
 <mat-card class="example-card">
   <mat-card-header>
     <div mat-card-avatar class="example-header-image"></div>
@@ -12,7 +12,7 @@
     <div class="ctrls">
       <mat-form-field appearance="fill" class="field">
         <mat-label>Coin</mat-label>
-        <mat-select>
+        <mat-select formControlName="coin">
           <mat-option *ngFor="let coin of coins" [value]="coin.value">
             {{ coin.viewValue }}
           </mat-option>
@@ -21,16 +21,33 @@
   
       <mat-form-field appearance="fill" class="field">
         <mat-label>Choose a date</mat-label>
-        <input matInput [matDatepicker]="picker" />
+        <input matInput [matDatepicker]="picker" formControlName="date"/>
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
     </div>
 
+    <div class="ctrls" *ngIf="currencies$ | async as currencies">
+      <mat-form-field appearance="fill" class="field">
+        <mat-label>Currency</mat-label>
+        <mat-select formControlName="currency">
+          <mat-option *ngFor="let c of currencies" [value]="c">
+            {{ c }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="value">
+        {{ value$ | async | number:'1.0-0'}}
+      </div>
+    </div>
+
+
+
   </mat-card-content>
   <mat-card-actions>
-    <button mat-raised-button color="primary">GET DATA</button>
-    <button mat-raised-button color="accent">
+    <button mat-raised-button color="primary" type="submit">GET DATA</button>
+    <button mat-raised-button color="accent" type="button">
       <mat-icon> save_alt </mat-icon>
       EXPORT
     </button>

@@ -9,7 +9,13 @@
 
 .ctrls {
     display: flex;
+    flex-wrap: nowrap;
     & > * {
         margin-right: 20px;
     }
+}
+
+.value {
+    font-size: 36px;
+    line-height: 1.4;
 }
