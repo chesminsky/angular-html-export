@@ -3,10 +3,11 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { selectCoinData } from '../crypto-store/crypto.selectors';
 import { format } from 'date-fns';
-import { getCrypto } from '../crypto-store/crypto.actions';
-import { map, withLatestFrom } from 'rxjs/operators';
+import { getCrypto, getCryptoSuccess } from '../crypto-store/crypto.actions';
+import { map, startWith, withLatestFrom } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { saveAs } from 'file-saver';
+import { CryptoService } from '../crypto-store/crypto.service';
 
 @Component({
   selector: 'app-crypto-widget',
@@ -35,9 +36,11 @@ export class CryptoWidgetComponent implements OnInit {
   value$ = this.form.get('currency').valueChanges.pipe(
     withLatestFrom(this.coinData$),
     map(([v, d]) => {
-      return d.market_data.current_price[v];
+      return v && d.market_data.current_price[v];
     })
   );
+
+  offlineMode = false;
 
   constructor(
     private store: Store,
@@ -47,6 +50,19 @@ export class CryptoWidgetComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.data);
+
+    // mock
+    if (this.data) {
+      const { data, form } = JSON.parse(decodeURIComponent(this.data));
+      this.store.dispatch(getCryptoSuccess({ data }));
+      this.offlineMode = true;
+
+      setTimeout(() => {
+        this.form.setValue(form);
+        this.form.get('coin').disable();
+        this.form.get('date').disable();
+      });
+    }
   }
 
   onSubmit() {
@@ -62,7 +78,18 @@ export class CryptoWidgetComponent implements OnInit {
   export() {
     this.http
       .get('export.html', { responseType: 'text' })
-      .subscribe((fileSrc) => {
+      .pipe(withLatestFrom(this.coinData$))
+      .subscribe(([fileSrc, data]) => {
+        fileSrc = fileSrc.replace(
+          '<my-export></my-export>',
+          `<my-export data="${encodeURIComponent(
+            JSON.stringify({
+              data,
+              form: this.form.value,
+            })
+          )}"></my-export>`
+        );
+
         const file = new File([fileSrc], `export.html`, {
           type: 'text/html;charset=utf-8',
         });

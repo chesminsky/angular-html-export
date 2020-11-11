@@ -43,8 +43,21 @@
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button color="primary" type="submit">GET DATA</button>
-      <button mat-raised-button color="accent" type="button" (click)="export()">
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="offlineMode"
+      >
+        GET DATA
+      </button>
+      <button
+        mat-raised-button
+        color="accent"
+        type="button"
+        (click)="export()"
+        [disabled]="offlineMode || (coinData$ | async) === null"
+      >
         <mat-icon> save_alt </mat-icon>
         EXPORT
       </button>
