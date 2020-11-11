@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { selectCoinData } from '../crypto-store/crypto.selectors';
@@ -14,6 +14,7 @@ import { saveAs } from 'file-saver';
   styleUrls: ['./crypto-widget.component.scss'],
 })
 export class CryptoWidgetComponent implements OnInit {
+  @Input() data;
   coins = [
     { value: 'bitcoin', viewValue: 'Bitcoin' },
     { value: 'ethereum', viewValue: 'Ethereum' },
@@ -44,7 +45,9 @@ export class CryptoWidgetComponent implements OnInit {
     private http: HttpClient
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log(this.data);
+  }
 
   onSubmit() {
     if (this.form.invalid) {
@@ -58,9 +61,9 @@ export class CryptoWidgetComponent implements OnInit {
 
   export() {
     this.http
-      .get('index.html', { responseType: 'text' })
+      .get('export.html', { responseType: 'text' })
       .subscribe((fileSrc) => {
-        const file = new File([fileSrc], `my-export.html`, {
+        const file = new File([fileSrc], `export.html`, {
           type: 'text/html;charset=utf-8',
         });
 

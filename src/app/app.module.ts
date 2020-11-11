@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { Injector, NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,6 +20,7 @@ import { CryptoEffects } from './crypto-store/crypto.effects';
 import { reducers } from './core.state';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
+import { createCustomElement } from '@angular/elements';
 
 @NgModule({
   declarations: [AppComponent, CryptoWidgetComponent],
@@ -38,9 +39,22 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatInputModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [],
-  bootstrap: [AppComponent],
+  // bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(injector: Injector) {
+    const component = createCustomElement(CryptoWidgetComponent, { injector });
+    customElements.define('my-export', component);
+  }
+
+  ngDoBootstrap(app): void {
+    const root = document.querySelector('app-root');
+
+    if (root) {
+      app.bootstrap(AppComponent);
+    }
+  }
+}
