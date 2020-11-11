@@ -1,0 +1,15 @@
+.example-header-image {
+    background: url('../../assets/bitcoin.png');
+    background-size: cover;;
+}
+
+:host {
+    width: 1000px;
+}
+
+.ctrls {
+    display: flex;
+    & > * {
+        margin-right: 20px;
+    }
+}
