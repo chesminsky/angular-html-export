@@ -30,7 +30,8 @@
     "file-saver": "^2.0.2",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
-    "zone.js": "~0.10.2"
+    "zone.js": "~0.10.2",
+    "xhr-mock": "^2.5.1"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "^9.1.0",

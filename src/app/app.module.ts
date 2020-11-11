@@ -50,12 +50,12 @@ export class AppModule {
     matIconRegistry: MatIconRegistry,
     domSanitizer: DomSanitizer
   ) {
-    const component = createCustomElement(CryptoWidgetComponent, { injector });
-    customElements.define('my-export', component);
-
     matIconRegistry.addSvgIconSet(
       domSanitizer.bypassSecurityTrustResourceUrl('./assets/sprite.svg')
     );
+
+    const component = createCustomElement(CryptoWidgetComponent, { injector });
+    customElements.define('my-export', component);
   }
 
   ngDoBootstrap(app): void {

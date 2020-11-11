@@ -4,6 +4,11 @@
     <meta charset="utf-8">
     <title>Export</title>
     <base href="/"/>
+    <script>
+        window.offlineData = {
+            svg: `<%= compilation.assets["assets/sprite.svg"].source() %>`
+        };
+    </script>
 </head>
     <my-export></my-export>
 </body>
