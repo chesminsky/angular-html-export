@@ -49,8 +49,6 @@ export class CryptoWidgetComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.data);
-
     // mock
     if (this.data) {
       const { data, form } = JSON.parse(decodeURIComponent(this.data));
