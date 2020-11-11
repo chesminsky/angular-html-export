@@ -3,13 +3,9 @@
     background-size: cover;;
 }
 
-:host {
-    width: 1000px;
-}
-
 .ctrls {
     display: flex;
-    flex-wrap: nowrap;
+    flex-flow: column;
     & > * {
         margin-right: 20px;
     }
