@@ -58,7 +58,7 @@
         (click)="export()"
         [disabled]="offlineMode || (coinData$ | async) === null"
       >
-        <mat-icon> save_alt </mat-icon>
+        <mat-icon svgIcon="save_alt"></mat-icon>
         EXPORT
       </button>
     </mat-card-actions>

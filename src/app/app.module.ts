@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { Injector, NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
@@ -10,7 +10,7 @@ import { MatCardModule } from '@angular/material/card';
 
 import { MatButtonModule } from '@angular/material/button';
 import { CryptoWidgetComponent } from './crypto-widget/crypto-widget.component';
-import { MatIconModule } from '@angular/material/icon';
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -45,9 +45,17 @@ import { createCustomElement } from '@angular/elements';
   // bootstrap: [AppComponent],
 })
 export class AppModule {
-  constructor(injector: Injector) {
+  constructor(
+    injector: Injector,
+    matIconRegistry: MatIconRegistry,
+    domSanitizer: DomSanitizer
+  ) {
     const component = createCustomElement(CryptoWidgetComponent, { injector });
     customElements.define('my-export', component);
+
+    matIconRegistry.addSvgIconSet(
+      domSanitizer.bypassSecurityTrustResourceUrl('./assets/sprite.svg')
+    );
   }
 
   ngDoBootstrap(app): void {
