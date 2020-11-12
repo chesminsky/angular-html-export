@@ -6,12 +6,18 @@
 .ctrls {
     display: flex;
     flex-flow: column;
-    & > * {
-        margin-right: 20px;
-    }
+
+}
+
+.field {
+    width: 100%;
 }
 
 .value {
     font-size: 36px;
     line-height: 1.4;
+}
+
+.example-card {
+    max-width: 280px;
 }
